@@ -16,31 +16,32 @@ GPT의 디자인 요청을 실시간으로 처리하여
 
 ---
 
-##  아키텍처 구성
+## 🧩 아키텍처 구성
+
+```
 ┌───────────────────────────────┐
-│        ChatGPT / User         │
-│    "Hero Section 만들어줘!"     │
+│         ChatGPT / User        │
+│   "Hero Section 만들어줘!"     │
 └──────────────┬────────────────┘
-               │ (POST /figma/create-frame)
+               │ POST /figma/create-frame
                ▼
-     ┌─────────────────────┐
-     │  Node.js + Express  │
-     │   (createFigmaFrame)│
-     └────────┬────────────┘
-              │ calls
-              ▼
+     ┌────────────────────────┐
+     │    Node.js + Express   │
+     │  (createFigmaFrame API)│
+     └──────────┬─────────────┘
+                │
+                ▼
      ┌──────────────────────────────┐
-     │        Figma REST API        │
-     │POST /files/:file_id/comments │
-     └────────┬─────────────────────┘
-              │
-              ▼
+     │       Figma REST API         │
+     │ POST /files/:file_id/comments│
+     └──────────┬───────────────────┘
+                │
+                ▼
      ┌──────────────────────────────┐
-     │   📐 Figma 도면에 주석 생성      │
+     │     📐 Figma 도면에 주석 생성     │
      │   "Hero Section (1440x800)"  │
      └──────────────────────────────┘
-
-
+```
 ---
 
 ## ⚙️ 기술 스택
@@ -55,6 +56,7 @@ GPT의 디자인 요청을 실시간으로 처리하여
 
 ## 📁 프로젝트 구조
 
+```
 gpt-figma-automation/
 ├── src/
 │   ├── index.ts                 # 서버 실행 시작점
@@ -72,7 +74,7 @@ gpt-figma-automation/
 ├── tsconfig.json                # TypeScript 설정
 ├── README.md                    # 프로젝트 문서
 
-
+```
 ---
 
 ## 실행 흐름
