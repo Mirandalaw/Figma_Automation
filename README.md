@@ -137,13 +137,16 @@ curl -X POST http://localhost:3000/figma/create-frame \
 ```
 결과: Figma 도면 좌표 (100,100)에 주석이 자동으로 생성됩니다.
 
-🧠 확장 예정 기능
+### 확장 예정 기능
 
-기능	설명
-🧩 Figma Plugin 연동	주석을 읽고 실제 UI 컴포넌트 생성
-📝 Notion 연동	디자인 요청 이력 자동 기록
-🤖 GPT Builder Actions	GPT가 직접 API를 호출하도록 연동
-☁️ EC2 / Vercel 배포	실시간 AI 디자이너 서버 운영
-👨‍💻 제작자
-박 경도
+ 기능	설명
 
+ Figma Plugin 연동	주석을 읽고 실제 UI 컴포넌트 생성
+ 
+ Notion 연동	디자인 요청 이력 자동 기록
+ 
+ GPT Builder Actions	GPT가 직접 API를 호출하도록 연동
+ 
+ EC2 / Vercel 배포	실시간 AI 디자이너 서버 운영
+ 
+ 제작자 박 경도
