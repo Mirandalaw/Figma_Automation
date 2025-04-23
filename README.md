@@ -17,14 +17,29 @@ GPT의 디자인 요청을 실시간으로 처리하여
 ---
 
 ##  아키텍처 구성
+┌───────────────────────────────┐
+│        ChatGPT / User         │
+│    "Hero Section 만들어줘!"     │
+└──────────────┬────────────────┘
+               │ (POST /figma/create-frame)
+               ▼
+     ┌─────────────────────┐
+     │  Node.js + Express  │
+     │   (createFigmaFrame)│
+     └────────┬────────────┘
+              │ calls
+              ▼
+     ┌──────────────────────────────┐
+     │        Figma REST API        │
+     │POST /files/:file_id/comments │
+     └────────┬─────────────────────┘
+              │
+              ▼
+     ┌──────────────────────────────┐
+     │   📐 Figma 도면에 주석 생성      │
+     │   "Hero Section (1440x800)"  │
+     └──────────────────────────────┘
 
-   사용자 or GPT 요청 
-       ↓ 
- [ Express API 서버 ]
-       ↓ 
-[ Figma API (files/:file_id/comments) ] 
-       ↓
-Figma 도면 주석(comment) 생성
 
 ---
 
@@ -40,50 +55,76 @@ Figma 도면 주석(comment) 생성
 
 ## 📁 프로젝트 구조
 
-gpt-figma-automation/ ├── src/ │ ├── index.ts # 서버 실행 진입점 │ ├── routes/figma.route.ts # 라우터 │ ├── controllers/figma.controller.ts │ ├── services/figma.service.ts │ ├── utils/figmaClient.ts # Figma API 호출 │ └── utils/logger.ts ├── .env # 환경 변수 ├── package.json
+gpt-figma-automation/
+├── src/
+│   ├── index.ts                 # 서버 실행 시작점
+│   ├── routes/
+│   │   └── figma.route.ts       # /figma/create-frame 라우터
+│   ├── controllers/
+│   │   └── figma.controller.ts  # 요청 처리 컨트롤러
+│   ├── services/
+│   │   └── figma.service.ts     # 비즈니스 로직
+│   ├── utils/
+│   │   ├── figmaClient.ts       # Figma API 호출
+│   │   └── logger.ts            # winston 로깅 유틸
+├── .env                         # 환경 변수 설정 (토큰, 파일 ID 등)
+├── package.json                 # 종속성 관리
+├── tsconfig.json                # TypeScript 설정
+├── README.md                    # 프로젝트 문서
 
 
 ---
 
-##  시작하기
+## 실행 흐름
 
 ### 1. 프로젝트 클론
 
-```
-git clone https://github.com/your-id/gpt-figma-automation.git
+```bash
+git clone https://github.com/your-username/gpt-figma-automation.git
 cd gpt-figma-automation
-2. 의존성 설치
-npm install
-3. 환경 변수 설정
-.env 파일을 생성하고 다음 정보를 입력합니다:
+```
+### 2. 의존성 설치
 
+```npm install```
+### 3. 환경 변수 설정
+
+.env 파일을 생성하고 다음 정보를 입력합니다:
+```
 FIGMA_API_TOKEN=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 FIGMA_FILE_ID=DNCJ7REt2SkQ0jNytR5jDH
 PORT=3000
- 토큰은 Figma 개발자 페이지에서 생성할 수 있습니다.
- FILE_ID는 Figma 링크의 https://www.figma.com/file/<FILE_ID>/... 에서 추출합니다.
+```
+ Figma API Token: https://www.figma.com/developers/api 에서 발급
+ File ID: Figma 공유 URL에서 추출
+(예: https://www.figma.com/file/<FILE_ID>/...)
 
-4. 서버 실행
-npm run dev
+### 4. 서버 실행
+
+```npm run dev```
  API 사용법
 POST /figma/create-frame
 Figma 파일에 GPT 기반 주석을 추가합니다.
 
  요청 예시
+ ```
 {
   "name": "Hero Section",
   "width": 1440,
   "height": 800
 }
+```
  응답 예시
+ ```
 {
   "success": true,
   "data": {
     "message": " GPT 자동 생성 요청\n- 이름: Hero Section\n- 크기: 1440x800"
   }
 }
+```
  테스트 방법
 Postman 또는 curl 사용
+```
 curl -X POST http://localhost:3000/figma/create-frame \
   -H "Content-Type: application/json" \
   -d '{
@@ -91,6 +132,7 @@ curl -X POST http://localhost:3000/figma/create-frame \
     "width": 1440,
     "height": 800
   }'
+```
 결과: Figma 도면 좌표 (100,100)에 주석이 자동으로 생성됩니다.
 
 🧠 확장 예정 기능
@@ -101,6 +143,5 @@ curl -X POST http://localhost:3000/figma/create-frame \
 🤖 GPT Builder Actions	GPT가 직접 API를 호출하도록 연동
 ☁️ EC2 / Vercel 배포	실시간 AI 디자이너 서버 운영
 👨‍💻 제작자
-정현 박
+박 경도
 
-GPT와 디자인 자동화의 미래를 함께 만들어가고 있습니다.
